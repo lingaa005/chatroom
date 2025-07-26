@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 
 urlpatterns = [
+    path("test/", lambda request: HttpResponse("Lingaa Django App is alive")),
     path('admin/', admin.site.urls),
     path('', include('chat.urls')),
 
