@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Django Chat</title>
+    <script>
+        let username = prompt("Enter your name");
+
+        function fetchMessages() {
+            fetch('/messages/')
+                .then(res => res.json())
+                .then(data => {
+                    let chatBox = document.getElementById("chat-box");
+                    chatBox.innerHTML = "";
+                    data.forEach(msg => {
+                        chatBox.innerHTML += `<div><b>${msg.user}</b> [${msg.timestamp}]: ${msg.message}</div>`;
+                    });
+                });
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById("message");
+            fetch('/send/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, message: messageInput.value })
+            }).then(() => {
+                messageInput.value = '';
+                fetchMessages();
+            });
+        }
+
+        setInterval(fetchMessages, 2000);
+        window.onload = fetchMessages;
+    </script>
+</head>
+<body>
+    <h2>Django AJAX Chat Room</h2>
+    <div id="chat-box" style="height:300px; overflow-y:scroll; border:1px solid #aaa; padding:10px;"></div>
+    <input type="text" id="message" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
